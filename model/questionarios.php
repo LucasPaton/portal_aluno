@@ -5,6 +5,7 @@
 // ============================================================
 
 require_once __DIR__ . '/../persistencia/persistencia.php';
+require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/usuarios.php';
 require_once __DIR__ . '/frequencias.php';
 
@@ -232,8 +233,8 @@ function estatisticasQuestionario($idQuestionario) {
 // ============================================================
 
 function gerarQuestionarioComIA($tema, $quantidade, $nivelDificuldade, $idQuestionario) {
-    $apiKey = 'AIzaSyDeIJ2OmsLfrw0N_R4a4PHfwi7M3Cml-1E';
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey";
+    $apiKey = GEMINI_API_KEY;
+    $url = GEMINI_API_URL . "?key=$apiKey";
 
     $prompt = "Você é um professor especialista. Crie $quantidade questões de múltipla escolha sobre o tema: '$tema'.
     Nível de dificuldade: $nivelDificuldade.
@@ -315,8 +316,8 @@ function analisarERecomendarAoProfessor($idQuestionario) {
 
     $enunciados = array_map(fn($q) => "- {$q['enunciado']} ({$q['porcentagemAcerto']}% de acerto)", $topicosProblema);
 
-    $apiKey = 'AIzaSyDeIJ2OmsLfrw0N_R4a4PHfwi7M3Cml-1E';
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey";
+    $apiKey = GEMINI_API_KEY;
+    $url = GEMINI_API_URL . "?key=$apiKey";
 
     $prompt = "Você é um assistente pedagógico. Analise os seguintes tópicos onde os alunos tiveram dificuldade no questionário '{$quiz['titulo']}':
     " . implode("\n", $enunciados) . "
@@ -350,8 +351,8 @@ function analisarDesempenhoAluno($idAluno, $idTurma) {
     $aluno  = buscarUsuarioPorId($idAluno) ?? [];
     $turma  = buscarTurmaPorId($idTurma) ?? [];
 
-    $apiKey = 'AIzaSyDeIJ2OmsLfrw0N_R4a4PHfwi7M3Cml-1E';
-    $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey";
+    $apiKey = GEMINI_API_KEY;
+    $url = GEMINI_API_URL . "?key=$apiKey";
 
     $notasTexto = implode(', ', array_map(fn($n) => "{$n['descricao']}: {$n['nota']}/{$n['notaMaxima']}", $notas));
 

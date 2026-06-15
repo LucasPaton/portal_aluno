@@ -1,6 +1,7 @@
 <?php
 require_once '../../controller/validar.php';
 validarTipo('aluno');
+require_once '../../config.php';
 require_once '../../model/turmas.php';
 require_once '../../model/questionarios.php';
 
@@ -104,7 +105,7 @@ include '../_layout.php';
 </style>
 
 <script>
-const apiKey = 'AIzaSyDeIJ2OmsLfrw0N_R4a4PHfwi7M3Cml-1E';
+const apiKey = '<?= GEMINI_API_KEY ?>';
 const chatHistory = [
     { role: 'user', parts: [{ text: 'Você é um tutor virtual educacional amigável chamado TutorIA. Ajude o aluno com dúvidas acadêmicas, explique conteúdos de forma clara e didática. Respostas em português, máximo 200 palavras por resposta.' }] },
     { role: 'model', parts: [{ text: 'Entendido! Estou pronto para ajudar. Pode me fazer perguntas!' }] }

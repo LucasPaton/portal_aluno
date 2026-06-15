@@ -12,6 +12,7 @@ verificar_senha.php
 extract_docx.php
 
 # Configuração local (contém credenciais)
+config.php
 config.local.php
 
 # Uploads de usuários

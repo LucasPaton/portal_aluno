@@ -6,6 +6,7 @@
 
 require_once __DIR__ . '/validar.php';
 validarTipo('aluno');
+require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../model/questionarios.php';
 require_once __DIR__ . '/../model/frequencias.php';
 require_once __DIR__ . '/../model/turmas.php';
@@ -35,8 +36,8 @@ if ($operacao === 'gerarRotina') {
         $resumo[] = "- {$t['nomeDisciplina']}: média {$media}/10, {$freq['totalFaltas']} faltas (limite {$freq['limiteFaltas']}h)";
     }
 
-    $apiKey = 'AIzaSyDeIJ2OmsLfrw0N_R4a4PHfwi7M3Cml-1E';
-    $url    = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=$apiKey";
+    $apiKey = GEMINI_API_KEY;
+    $url    = GEMINI_API_URL . "?key=$apiKey";
 
     $aluno = $_SESSION['nome'];
     $prompt = "Você é um tutor educacional. Crie uma rotina de estudos semanal personalizada para o aluno '$aluno'.
