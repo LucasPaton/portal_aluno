@@ -15,6 +15,9 @@ require_once __DIR__ . '/../model/frequencias.php';
 require_once __DIR__ . '/../model/questionarios.php';
 require_once __DIR__ . '/../model/forum.php';
 require_once __DIR__ . '/../model/retencao.php';
+require_once __DIR__ . '/../model/materiais.php';
+require_once __DIR__ . '/../model/servicos.php';
+require_once __DIR__ . '/../model/contato.php';
 
 // Capturar operação (POST tem prioridade sobre GET)
 $operacao = '';
@@ -466,6 +469,157 @@ if ($operacao === 'reativarUsuario') {
 if ($operacao === 'purgarExpirados') {
     $total = purgarDadosExpirados($_SESSION['idUsuario']);
     header("Location: ../view/admin/inativos.php?msg=$total registro(s) purgado(s).");
+    exit;
+}
+// ============================================================
+// MATERIAIS DIDÁTICOS (admin)
+// ============================================================
+
+if ($operacao === 'criarMaterial') {
+    $dados = [
+        'nome'      => filter_input(INPUT_POST, 'nome',      FILTER_SANITIZE_SPECIAL_CHARS),
+        'descricao' => filter_input(INPUT_POST, 'descricao',  FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'tipo'      => filter_input(INPUT_POST, 'tipo',       FILTER_SANITIZE_SPECIAL_CHARS) ?: 'apostila',
+        'preco'     => filter_input(INPUT_POST, 'preco',      FILTER_VALIDATE_FLOAT) ?: 0,
+        'idCurso'   => filter_input(INPUT_POST, 'idCurso',    FILTER_VALIDATE_INT) ?: null,
+        'imagem'    => filter_input(INPUT_POST, 'imagem',     FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+    ];
+    $retorno = criarMaterial($dados);
+    if ($retorno === SUCESSO) {
+        header("Location: ../view/admin/materiais.php?msg=Material cadastrado com sucesso!");
+    } else {
+        header("Location: ../view/admin/formMaterial.php?msg=" . urlencode($retorno));
+    }
+    exit;
+}
+
+if ($operacao === 'editarMaterial') {
+    $id = filter_input(INPUT_POST, 'idMaterial', FILTER_VALIDATE_INT);
+    $dados = [
+        'nome'      => filter_input(INPUT_POST, 'nome',      FILTER_SANITIZE_SPECIAL_CHARS),
+        'descricao' => filter_input(INPUT_POST, 'descricao',  FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'tipo'      => filter_input(INPUT_POST, 'tipo',       FILTER_SANITIZE_SPECIAL_CHARS) ?: 'apostila',
+        'preco'     => filter_input(INPUT_POST, 'preco',      FILTER_VALIDATE_FLOAT) ?: 0,
+        'idCurso'   => filter_input(INPUT_POST, 'idCurso',    FILTER_VALIDATE_INT) ?: null,
+        'imagem'    => filter_input(INPUT_POST, 'imagem',     FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+    ];
+    atualizarMaterial($id, $dados);
+    header("Location: ../view/admin/materiais.php?msg=Material atualizado!");
+    exit;
+}
+
+if ($operacao === 'desativarMaterial') {
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    desativarMaterial($id);
+    header("Location: ../view/admin/materiais.php?msg=Material removido.");
+    exit;
+}
+
+// ============================================================
+// SERVIÇOS ACADÊMICOS (admin)
+// ============================================================
+
+if ($operacao === 'criarServico') {
+    $dados = [
+        'nome'          => filter_input(INPUT_POST, 'nome',          FILTER_SANITIZE_SPECIAL_CHARS),
+        'descricao'     => filter_input(INPUT_POST, 'descricao',     FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'categoria'     => filter_input(INPUT_POST, 'categoria',     FILTER_SANITIZE_SPECIAL_CHARS) ?: 'outro',
+        'valorEstimado' => filter_input(INPUT_POST, 'valorEstimado', FILTER_VALIDATE_FLOAT) ?: 0,
+        'imagem'        => filter_input(INPUT_POST, 'imagem',        FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'horarioFunc'   => filter_input(INPUT_POST, 'horarioFunc',   FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'responsavel'   => filter_input(INPUT_POST, 'responsavel',   FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+    ];
+    $retorno = criarServico($dados);
+    if ($retorno === SUCESSO) {
+        header("Location: ../view/admin/servicos.php?msg=Serviço cadastrado com sucesso!");
+    } else {
+        header("Location: ../view/admin/formServico.php?msg=" . urlencode($retorno));
+    }
+    exit;
+}
+
+if ($operacao === 'editarServico') {
+    $id = filter_input(INPUT_POST, 'idServico', FILTER_VALIDATE_INT);
+    $dados = [
+        'nome'          => filter_input(INPUT_POST, 'nome',          FILTER_SANITIZE_SPECIAL_CHARS),
+        'descricao'     => filter_input(INPUT_POST, 'descricao',     FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'categoria'     => filter_input(INPUT_POST, 'categoria',     FILTER_SANITIZE_SPECIAL_CHARS) ?: 'outro',
+        'valorEstimado' => filter_input(INPUT_POST, 'valorEstimado', FILTER_VALIDATE_FLOAT) ?: 0,
+        'imagem'        => filter_input(INPUT_POST, 'imagem',        FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'horarioFunc'   => filter_input(INPUT_POST, 'horarioFunc',   FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'responsavel'   => filter_input(INPUT_POST, 'responsavel',   FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+    ];
+    atualizarServico($id, $dados);
+    header("Location: ../view/admin/servicos.php?msg=Serviço atualizado!");
+    exit;
+}
+
+if ($operacao === 'desativarServico') {
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+    desativarServico($id);
+    header("Location: ../view/admin/servicos.php?msg=Serviço removido.");
+    exit;
+}
+
+// ============================================================
+// MENSAGENS DE CONTATO
+// ============================================================
+
+if ($operacao === 'enviarContato') {
+    $dados = [
+        'nome'         => filter_input(INPUT_POST, 'nome',         FILTER_SANITIZE_SPECIAL_CHARS),
+        'email'        => filter_input(INPUT_POST, 'email',        FILTER_SANITIZE_EMAIL),
+        'telefone'     => filter_input(INPUT_POST, 'telefone',     FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'assunto'      => filter_input(INPUT_POST, 'assunto',      FILTER_SANITIZE_SPECIAL_CHARS) ?? '',
+        'mensagem'     => filter_input(INPUT_POST, 'mensagem',     FILTER_SANITIZE_SPECIAL_CHARS),
+        'formaContato' => filter_input(INPUT_POST, 'formaContato', FILTER_SANITIZE_SPECIAL_CHARS) ?: 'email',
+    ];
+    $retorno = salvarMensagemContato($dados);
+    $perfil = $_SESSION['tipo'] ?? '';
+    if ($retorno === SUCESSO) {
+        header("Location: ../view/$perfil/dashboard.php?msg=Mensagem enviada com sucesso! Entraremos em contato em breve.");
+    } else {
+        header("Location: ../view/contato.php?msg=" . urlencode($retorno));
+    }
+    exit;
+}
+
+if ($operacao === 'responderMensagem') {
+    $id       = filter_input(INPUT_POST, 'idMensagem', FILTER_VALIDATE_INT);
+    $resposta = filter_input(INPUT_POST, 'resposta',   FILTER_SANITIZE_SPECIAL_CHARS);
+    responderMensagem($id, $resposta, $_SESSION['idUsuario']);
+    header("Location: ../view/admin/mensagens.php?msg=Mensagem respondida!");
+    exit;
+}
+
+// ============================================================
+// ALTERAÇÃO DE SENHA (qualquer usuário logado)
+// ============================================================
+
+if ($operacao === 'alterarSenha') {
+    $senhaAtual = $_POST['senhaAtual'] ?? '';
+    $novaSenha  = $_POST['novaSenha'] ?? '';
+    $confirmar  = $_POST['confirmarSenha'] ?? '';
+    $id = $_SESSION['idUsuario'];
+    $perfil = $_SESSION['tipo'] ?? 'aluno';
+
+    if (strlen($novaSenha) < 6) {
+        header("Location: ../view/admin/alterarSenha.php?erro=A nova senha deve ter pelo menos 6 caracteres.");
+        exit;
+    }
+    if ($novaSenha !== $confirmar) {
+        header("Location: ../view/admin/alterarSenha.php?erro=As senhas não conferem.");
+        exit;
+    }
+
+    $retorno = alterarSenha($id, $senhaAtual, $novaSenha);
+    if ($retorno === SUCESSO) {
+        header("Location: ../view/$perfil/dashboard.php?msg=Senha alterada com sucesso!");
+    } elseif ($retorno === ERRO_SENHA) {
+        header("Location: ../view/admin/alterarSenha.php?erro=Senha atual incorreta.");
+    } else {
+        header("Location: ../view/admin/alterarSenha.php?erro=" . urlencode($retorno));
+    }
     exit;
 }
 
