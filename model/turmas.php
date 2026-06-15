@@ -325,15 +325,16 @@ function listarTurmasAlunoV2($idAluno) {
                  JOIN Aulas a ON f.idAula = a.idAula
                  WHERE f.idAluno = ? AND f.idTurma = t.idTurma AND f.presente = 0) as totalFaltas,
                 (SELECT COUNT(*) FROM Aulas a2 WHERE a2.idTurma = t.idTurma) as totalAulas,
-                t.codigo as nomeDisciplina,
-                t.cargaHorariaCalc as cargaHoraria
+                d.nome as nomeDisciplina,
+                d.cargaHoraria as cargaHoraria
          FROM Matriculas m
          JOIN Turmas t ON m.idTurma = t.idTurma
+         LEFT JOIN Disciplinas d ON t.idDisciplina = d.idDisciplina
          LEFT JOIN TurmaMetadata tm ON tm.idTurma = t.idTurma
          LEFT JOIN Cursos c ON c.idCurso = tm.idCurso
          LEFT JOIN Usuarios u ON u.idUsuario = t.idProfessor
          WHERE m.idAluno = ? AND m.status = 'ativa'
-         ORDER BY t.codigo",
+         ORDER BY d.nome",
         "ii", [$idAluno, $idAluno]
     );
     return obterTodos($res);
