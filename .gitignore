@@ -1,0 +1,35 @@
+# ============================================================
+# Portal do Aluno - .gitignore
+# ============================================================
+
+# Documento do projeto (não é código)
+ProjetoFinal_MVC_BD_Sessao.docx
+
+# Arquivos de debug/diagnóstico (risco de segurança)
+diagnostico.php
+gerar_sql.php
+verificar_senha.php
+extract_docx.php
+
+# Configuração local (contém credenciais)
+config.local.php
+
+# Uploads de usuários
+uploads/trabalhos/*
+uploads/fotos/*
+!uploads/trabalhos/.gitkeep
+!uploads/fotos/.gitkeep
+!uploads/.htaccess
+
+# IDE e sistema operacional
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# Diretório criado incorretamente
+{view,controller,model,persistencia,assets/
