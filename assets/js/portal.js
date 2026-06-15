@@ -108,6 +108,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // Dark Mode Toggle
+    const themeToggle = document.getElementById('themeToggleTop');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            const root = document.documentElement;
+            const isDark = root.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                root.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                root.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
+
+    // Initialize Theme
+    if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
 });
 
 // ------------------------------------------------------------
