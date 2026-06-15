@@ -1,138 +1,50 @@
-# Portal do Aluno — PHP MVC
-> Sistema educacional completo com sessões, MVC, banco MySQL, IA Gemini e retenção de dados por 10 anos.
+# Portal do Aluno (Professional Upgrade)
 
-## Estrutura do Projeto
+Este é um sistema Web (PHP + MySQL + MVC) de gerenciamento acadêmico que passou por um **upgrade visual e de funcionalidades** para atingir um padrão profissional premium. O sistema lida com diferentes níveis de acesso (Admin, Professor e Aluno), além de integrar com a API do Gemini para Tutoria com IA e Análise Preditiva de Retenção.
 
-```
-portal_aluno/
-├── persistencia/
-│   ├── banco.sql          ← Execute no MySQL primeiro
-│   ├── conexao.php        ← Configurações de banco
-│   └── persistencia.php   ← Funções genéricas (conectar, SELECT, INSERT...)
-│
-├── model/
-│   ├── usuarios.php       ← Gestão de Admin, Professor, Aluno
-│   ├── turmas.php         ← Cursos, Disciplinas, Turmas, Matrículas
-│   ├── frequencias.php    ← Aulas, Frequências, Notas
-│   ├── questionarios.php  ← Quizzes + IA Gemini
-│   ├── forum.php          ← Fórum, Avisos, Trabalhos
-│   └── retencao.php       ← Arquivamento e retenção 10 anos
-│
-├── controller/
-│   ├── controlador.php         ← Ponto central de todas as requisições
-│   ├── controladorRetencao.php ← Operações de arquivamento
-│   ├── validar.php             ← Proteção de sessão
-│   ├── iaAluno.php             ← Endpoint AJAX — IA do aluno
-│   └── iaAnalise.php           ← Endpoint AJAX — IA do professor
-│
-├── view/
-│   ├── _layout.php        ← Sidebar + topbar compartilhados
-│   ├── formlogin.php      ← Página pública de login
-│   ├── admin/
-│   │   ├── dashboard.php
-│   │   ├── usuarios.php       ← Listagem com pesquisa + paginação
-│   │   ├── formUsuario.php    ← Cadastro completo de usuário
-│   │   ├── inativos.php       ← Gestão de registros inativos (retenção)
-│   │   └── snapshotUsuario.php← Histórico completo arquivado
-│   ├── professor/
-│   │   ├── dashboard.php
-│   │   ├── turmaDetalhe.php   ← Gestão da turma + gráficos
-│   │   └── estatQuestionario.php ← Stats + análise IA
-│   └── aluno/
-│       ├── dashboard.php
-│       ├── disciplinas.php    ← Notas + frequência por disciplina
-│       ├── frequencia.php     ← Histórico aula a aula
-│       ├── notas.php          ← Gráficos de desempenho
-│       ├── questionarios.php  ← Lista de quizzes
-│       ├── responderQuiz.php  ← Responder questionário (com timer)
-│       ├── trabalhos.php      ← Entregas de trabalhos
-│       └── tutor.php          ← Chat com IA + análise personalizada
-│
-└── assets/
-    ├── css/style.css      ← Design system completo
-    └── uploads/           ← Arquivos enviados pelos alunos
-```
+## 🚀 Novidades do Upgrade Profissional
 
-## Instalação
+- **Segurança Reforçada:** Centralização das chaves de API (Gemini) em um arquivo `config.php` não versionado e remoção de scripts de debug inseguros do ambiente de produção.
+- **Novas Tabelas e CRUDs Completos:**
+  - `Materiais Didáticos` (cadastro de apostilas, livros, vídeos, etc.)
+  - `Serviços Acadêmicos` (monitoria, laboratório, biblioteca, etc.)
+  - `Mensagens de Contato` (fale conosco integrado para alunos)
+- **Design "Glassmorphism" Premium:** Nova interface de usuário com tema visual profissional, barra lateral responsiva, efeitos em vidro (*glass*), transições suaves e tipografia moderna (Inter).
+- **Dark Mode Integrado:** Suporte completo a tema claro e escuro, com preferência salva localmente.
+- **Painéis Administrativos Refinados:** Listagens e formulários otimizados e mais intuitivos para todas as operações do sistema.
+- **Alertas Dinâmicos:** Sistema de toast notifications e modais integrados.
+- **Módulo de Troca de Senha:** Recurso nativo para todos os usuários logados alterarem suas senhas com segurança.
 
-### 1. Banco de dados
-```sql
--- No MySQL/phpMyAdmin, execute:
-source /caminho/do/projeto/persistencia/banco.sql
-```
+## 🛠️ Tecnologias Utilizadas
 
-### 2. Configuração
-Edite `persistencia/conexao.php`:
-```php
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', 'sua_senha');
-define('DB_NAME', 'PortalAlunoBD');
-```
+- **Backend:** PHP 8+ (Orientação a Objetos básica, Padrão MVC manual)
+- **Banco de Dados:** MySQL (via PDO)
+- **Frontend:** HTML5, CSS3 Nativo (Variáveis CSS, Flexbox, CSS Grid), JavaScript Vanilla
+- **APIs Externas:** Google Gemini AI (Geração de texto para Tutor e Análises), ViaCEP (Busca de endereços), Chart.js (Gráficos)
 
-### 3. Servidor
-- **XAMPP/LAMP**: Coloque a pasta `portal_aluno/` dentro de `htdocs/`
-- Acesse: `http://localhost/portal_aluno/view/formlogin.php`
+## 📁 Estrutura do Projeto
 
-### 4. Login inicial
-| Tipo | E-mail | Senha |
-|------|--------|-------|
-| Admin | admin@portal.edu.br | admin123 |
+O sistema é construído sob um padrão **MVC Simplificado (Front Controller)**:
 
-## Funcionalidades
+- `/assets/`: Scripts JS globais, estilos CSS e eventuais imagens.
+- `/controller/`: Contém o `controlador.php` central (que roteia as ações via GET/POST da variável `operacao`), além de scripts de validação de acesso.
+- `/model/`: Funções de interação com o banco de dados e regras de negócio para cada entidade (Usuários, Turmas, Materiais, Serviços, etc).
+- `/persistencia/`: Arquivos `.sql` para criação/upgrade do esquema e arquivo de conexão `persistencia.php` (PDO).
+- `/view/`: Interfaces do usuário separadas por perfil (`/admin`, `/professor`, `/aluno`). Inclui o arquivo `/view/_layout.php` que monta as estruturas de topo e lateral da página.
+- `config.php`: Arquivo central de configurações do ambiente (chaves de API, banco). *Requerido, criado a partir de config.example.php*.
 
-### Administrador
-- Cadastro de alunos e professores (com todos os dados pessoais e endereço)
-- Matrícula automática: `ADM-2024-0001`, `PROF-2024-0001`, `ALU-2024-0001`
-- Gestão de cursos, disciplinas e turmas (grade curricular)
-- Alocação de alunos em turmas
-- **Retenção de dados**: arquivamento com snapshot completo (JSON) por 10 anos
-- Consulta de histórico acadêmico de alunos inativos/formados
-- Purga de dados pessoais após vencimento (anonimização, mantendo histórico)
+## ⚙️ Instalação e Configuração
 
-### Professor
-- Visualização das turmas com gráficos de desempenho
-- Registro de aulas e frequência
-- Lançamento de notas
-- Criação de questionários (manual ou com IA Gemini)
-- Estatísticas de questionários: % acerto por questão, distribuição de notas
-- **IA**: análise pedagógica com sugestão de reforço de conteúdo
-- Criação de trabalhos e correção de entregas
-- Fórum por turma
+1. **Requisitos:** Servidor local rodando PHP (ex: XAMPP, Laragon, WAMP) e MySQL.
+2. **Banco de Dados:** 
+   - Crie o banco `PortalAlunoBD` em seu gerenciador (phpMyAdmin).
+   - Importe os arquivos da pasta `/persistencia/` em ordem (o banco original primeiro, se aplicável, e depois o script `upgrade.sql`).
+3. **Configuração Ambiental:**
+   - Renomeie (ou copie) `config.example.php` para `config.php`.
+   - Adicione suas credenciais do Banco de Dados e, principalmente, sua `GEMINI_API_KEY`.
+4. **Hospedagem:** Coloque a pasta do projeto dentro de `htdocs` (se usando XAMPP) ou no diretório público do seu servidor web. Acesse via navegador em `http://localhost/portal_aluno`.
 
-### Aluno
-- Dashboard com alertas de frequência
-- Frequência detalhada aula a aula com barra de progresso
-- Notas com gráficos de evolução
-- Resposta de questionários com timer opcional
-- Entrega de trabalhos com upload de arquivo
-- **Tutor IA**: chat com Gemini + análise de desempenho + rotina de estudos personalizada
-- Fórum e avisos
+## 👨‍💻 Autor
 
-## Retenção de Dados (10 anos)
-Ao arquivar um aluno (formatura, desligamento, etc.):
-1. Um **snapshot JSON** com todos os dados pessoais e acadêmicos é salvo
-2. O campo `dataExpiracao = dataEvento + 10 anos` é definido
-3. O aluno fica inativo mas todos os dados permanecem acessíveis
-4. Após 10 anos, apenas os **dados pessoais** são anonimizados (nome, CPF, e-mail, endereço)
-5. O **histórico acadêmico** (notas, frequências, disciplinas) é mantido permanentemente
-
-## Segurança
-- Senhas com `password_hash()` (bcrypt)
-- Prepared Statements em todas as queries (sem SQL Injection)
-- `htmlspecialchars()` em todas as saídas (sem XSS)
-- `filter_input()` em todos os inputs
-- Controle de sessão com verificação de tipo de usuário
-- Soft delete (nunca apaga fisicamente registros ativos)
-
-## IA (Google Gemini)
-Chave configurada em `model/questionarios.php` — substitua pela sua:
-```php
-$apiKey = 'SUA_CHAVE_GEMINI_AQUI';
-```
-Funcionalidades de IA:
-- Geração automática de questões de múltipla escolha
-- Análise pedagógica por questionário
-- Análise de desempenho individual do aluno
-- Rotina de estudos semanal personalizada
-- Chat educacional em tempo real
+Atualizado e Mantido por **Lucas Paton** ([@LucasPaton](https://github.com/LucasPaton)).
+Email de Contato: [lcspaton@gmail.com](mailto:lcspaton@gmail.com)
