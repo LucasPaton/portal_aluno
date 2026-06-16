@@ -2,7 +2,7 @@
 
 Este é um sistema Web (PHP + MySQL + MVC) de gerenciamento acadêmico que passou por um **upgrade visual e de funcionalidades** para atingir um padrão profissional premium. O sistema lida com diferentes níveis de acesso (Admin, Professor e Aluno), além de integrar com a API do Gemini para Tutoria com IA e Análise Preditiva de Retenção.
 
-## 🚀 Novidades do Upgrade Profissional
+## 🚀 Novidades do Upgrade
 
 - **Segurança Reforçada:** Centralização das chaves de API (Gemini) em um arquivo `config.php` não versionado e remoção de scripts de debug inseguros do ambiente de produção.
 - **Novas Tabelas e CRUDs Completos:**
